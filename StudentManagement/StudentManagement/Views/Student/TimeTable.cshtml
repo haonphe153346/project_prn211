@@ -1,0 +1,177 @@
+﻿@using StudentManagement.Models
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@model StudentManagement.Models.Schedule
+@using System.Linq;
+@{
+    Dictionary<int, Dictionary<string, Schedule>> map = ViewBag.TimeTable;
+}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="home">Schedule</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+            <ul class="navbar-nav m-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Manager Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Hello Huu Quyet</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<h1>Activities for ...(HE152222)</h1>
+<h3>Select a term, course ...</h3>
+<div class="container-fluid">
+    <div class="timetable-img text-center">
+        <img src="img/content/timetable.png" alt="">
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr class="bg-light-gray">
+                    <th class="text-uppercase">#</th>
+                    <th class="text-uppercase">Monday</th>
+                    <th class="text-uppercase">Tuesday</th>
+                    <th class="text-uppercase">Wednesday</th>
+                    <th class="text-uppercase">Thursday</th>
+                    <th class="text-uppercase">Friday</th>
+                    <th class="text-uppercase">Saturday</th>
+                    <th class="text-uppercase">Sunday</th>
+                </tr>
+                <tr>
+                    <th class="text-uppercase"></th>
+                    @foreach (var date in ViewBag.Date)
+                    {
+                        <th class="text-uppercase">@date</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Slot slot in ViewBag.slot)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            Slot @slot.SlotId
+                        </td>
+                        @if (map.ContainsKey(@slot.SlotId))
+                        {
+                            @foreach (String date in ViewBag.Date)
+                            {
+                                @if (map.Values.ElementAt(@slot.SlotId-1).ContainsKey(date))
+                                {
+                                    <td>
+                                        <div><b>@map.Values.ElementAt(@slot.SlotId-1).Values.ElementAt(0).Subject.SubjectCode</b>  </div>
+                                        <div>
+                                            @map.Values.ElementAt(@slot.SlotId-1).Values.ElementAt(0).Class.ClassName
+                                        </div>(@slot.SlotTime)<br>
+                                        @if (map.Values.ElementAt(@slot.SlotId-1).Values.ElementAt(0).Status == true)
+                                        {
+                                            <span style="color:green">
+                                                Attend
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:red">
+                                                Not yet
+                                            </span>
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <div><b>-</b>  </div>
+                                    </td>
+                                }
+                            }
+                        }
+                        @*<c:choose>
+                    <c:when test="${map.containsKey(slot.id)}">
+                    <c:forEach items="${days}" var="day">
+                    <c:choose>
+                    <c:when test="${map.get(slot.id).containsKey(day)}">
+                    <td>
+                    <div><b>${map.get(slot.id).get(day).subject}</b>  </div>
+                    <div>${map.get(slot.id).get(day).className}</div>
+                    (${slot.time}) <span style="color: ${map.get(slot.id).get(day).attend==1?" green":map.get(slot.id).get(day).attend= =2?"unset":"red"}">( ${map.get(slot.id).get(day).attend==2?"Not yet":map.get(slot.id).get(day).attend==1?"attend":"absent"})</span>
+
+                    </td>
+                    </c:when>
+                    <c:otherwise>
+                    <td>-</td>
+                    </c:otherwise>
+                    </c:choose>
+                    </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    </c:otherwise>
+                    </c:choose>*@
+
+                    </tr>
+                }
+                @*<c:forEach items="${slots}" var="slot">
+                <tr>
+                <td class="align-middle">Slot ${slot.id}
+                </td>
+                <c:choose>
+                <c:when test="${map.containsKey(slot.id)}">
+                <c:forEach items="${days}" var="day">
+                <c:choose>
+                <c:when test="${map.get(slot.id).containsKey(day)}">
+                <td>
+                <div ><b>${map.get(slot.id).get(day).subject}</b>  </div>
+                <div>${map.get(slot.id).get(day).className}</div>
+                (${slot.time}) <span style="color: ${map.get(slot.id).get(day).attend==1?"green":map.get(slot.id).get(day).attend==2?"unset":"red"}" >( ${map.get(slot.id).get(day).attend==2?"Not yet":map.get(slot.id).get(day).attend==1?"attend":"absent"})</span>
+
+                </td>
+                </c:when>
+                <c:otherwise>
+                <td>-</td>
+                </c:otherwise>
+                </c:choose>
+                </c:forEach>
+                </c:when>
+                <c:otherwise>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                </c:otherwise>
+                </c:choose>
+
+                </tr>
+
+                </c:forEach>*@
+
+            </tbody>
+        </table>
+    </div>
+</div>
