@@ -26,6 +26,7 @@ namespace Student_Management.Models
         public virtual Lecturer Lecturer { get; set; }
         public virtual Room Room { get; set; }
         public virtual Slot Slot { get; set; }
+        public virtual Subject Subject { get; set; }
         public virtual ICollection<StudentAttended> StudentAttendeds { get; set; }
     }
 }
