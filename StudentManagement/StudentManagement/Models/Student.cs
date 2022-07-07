@@ -19,6 +19,9 @@ namespace StudentManagement.Models
         public string StudentAddress { get; set; }
         public string StudentEmail { get; set; }
         public bool? StudentGender { get; set; }
+        public string StudentImg { get; set; }
+        public string StudentCode { get; set; }
+        public string StudentPass { get; set; }
 
         public virtual Class Class { get; set; }
         public virtual ICollection<StudentAttended> StudentAttendeds { get; set; }

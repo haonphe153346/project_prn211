@@ -4,6 +4,8 @@
 @using System.Linq;
 @{
     Dictionary<int, Dictionary<string, Schedule>> map = ViewBag.TimeTable;
+    List<StudentAttended> list = ViewBag.StudentAttendance;
+    int check = 0;
 }
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -27,7 +29,7 @@
                     <a class="nav-link" href="#">Manager Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Hello Huu Quyet</a>
+                    <a class="nav-link" href="#">Hello Ngoc Hoan</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Login</a>
@@ -36,7 +38,7 @@
         </div>
     </div>
 </nav>
-<h1>Activities for ...(HE152222)</h1>
+<h1>Activities for ...(HE151308)</h1>
 <h3>Select a term, course ...</h3>
 <div class="container-fluid">
     <div class="timetable-img text-center">
@@ -46,7 +48,23 @@
         <table class="table table-bordered text-center">
             <thead>
                 <tr class="bg-light-gray">
-                    <th class="text-uppercase">#</th>
+                    <th class="text-uppercase" rowspan="2">
+                        <form id="form" action="Student" method="post">
+                            YEAR  <select>
+                                @for (int i = 2022; i >= 2019; i--)
+                                {
+                                    <option>@i</option>
+                                }
+                            </select><BR><br>
+                            WEEK  <select onchange="submit()" name="weekid">
+
+                                @for (int i = 0; i < ViewBag.week.Count; i++)
+                                {
+                                    <option selected="@((i+1) == ViewBag.selectedWeek?"selected":null)" value="@(i+1)">@ViewBag.week[i]</option>
+                                }
+                            </select>
+                        </form>
+                    </th>
                     <th class="text-uppercase">Monday</th>
                     <th class="text-uppercase">Tuesday</th>
                     <th class="text-uppercase">Wednesday</th>
@@ -56,7 +74,6 @@
                     <th class="text-uppercase">Sunday</th>
                 </tr>
                 <tr>
-                    <th class="text-uppercase"></th>
                     @foreach (var date in ViewBag.Date)
                     {
                         <th class="text-uppercase">@date</th>
@@ -77,100 +94,75 @@
                                 @if (map.Values.ElementAt(@slot.SlotId-1).ContainsKey(date))
                                 {
                                     <td>
-                                        <div><b>@map.Values.ElementAt(@slot.SlotId-1).Values.ElementAt(0).Subject.SubjectCode</b>  </div>
+
+                                        <a asp-controller="Student" asp-action="ActivityDetail" asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
+                                            <b>@map[slot.SlotId][date].Subject.SubjectCode</b>
+                                        </a>
+                                        <a asp-controller="Student" asp-action="Attendance" asp-route-classId=@map[slot.SlotId][date].ClassId asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
+                                            <b>Attendance</b>
+                                        </a>
                                         <div>
-                                            @map.Values.ElementAt(@slot.SlotId-1).Values.ElementAt(0).Class.ClassName
+                                            at
+                                            @map[slot.SlotId][date].Room.RoomName
+                                            <br>
+                                            @*@for (int i = check; i < ViewBag.studentAttend.Count; i++)
+                                            {
+                                                <span style="color:green">@ViewBag.studentAttend.Count</span>
+                                                if(ViewBag.studentAttend[i].ScheduleId == @map[slot.SlotId][date].ScheduleId)
+                                                {
+                                                    if(ViewBag.studentAttend[i].StudentStatus == 2)
+                                                    {
+                                                        <span style="color:green">Attend</span>
+                                                        check++;
+                                                        break;
+                                                    }
+                                                    else if(ViewBag.studentAttend[i].StudentStatus == 1)
+                                                    {
+                                                        <span style="color:red">Absent</span>
+                                                        check++;
+                                                        break;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span style="color:red">Not Yet</span>
+                                                    
+                                                     break;
+                                                }
+                                            }*@
+                                            @if(ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 2)
+                                            {
+                                                <span style="color:green">Attend</span>
+                                                check++;
+                                            }
+                                            else if (ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 1)
+                                            {
+                                                <span style="color:red">Absent</span>
+                                                check++;
+                                            }
+                                            else
+                                            {
+                                                <span style="color:red">Not Yet</span>
+                                                check++;
+                                            }
                                         </div>(@slot.SlotTime)<br>
-                                        @if (map.Values.ElementAt(@slot.SlotId-1).Values.ElementAt(0).Status == true)
-                                        {
-                                            <span style="color:green">
-                                                Attend
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span style="color:red">
-                                                Not yet
-                                            </span>
-                                        }
+
                                     </td>
                                 }
                                 else
                                 {
                                     <td>
-                                        <div><b>-</b>  </div>
+                                        <div><b>-</b></div>
                                     </td>
+                                }
+                                if(check < ViewBag.studentAttend.Count)
+                                {
+                                     
                                 }
                             }
                         }
-                        @*<c:choose>
-                    <c:when test="${map.containsKey(slot.id)}">
-                    <c:forEach items="${days}" var="day">
-                    <c:choose>
-                    <c:when test="${map.get(slot.id).containsKey(day)}">
-                    <td>
-                    <div><b>${map.get(slot.id).get(day).subject}</b>  </div>
-                    <div>${map.get(slot.id).get(day).className}</div>
-                    (${slot.time}) <span style="color: ${map.get(slot.id).get(day).attend==1?" green":map.get(slot.id).get(day).attend= =2?"unset":"red"}">( ${map.get(slot.id).get(day).attend==2?"Not yet":map.get(slot.id).get(day).attend==1?"attend":"absent"})</span>
-
-                    </td>
-                    </c:when>
-                    <c:otherwise>
-                    <td>-</td>
-                    </c:otherwise>
-                    </c:choose>
-                    </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    </c:otherwise>
-                    </c:choose>*@
-
                     </tr>
                 }
-                @*<c:forEach items="${slots}" var="slot">
-                <tr>
-                <td class="align-middle">Slot ${slot.id}
-                </td>
-                <c:choose>
-                <c:when test="${map.containsKey(slot.id)}">
-                <c:forEach items="${days}" var="day">
-                <c:choose>
-                <c:when test="${map.get(slot.id).containsKey(day)}">
-                <td>
-                <div ><b>${map.get(slot.id).get(day).subject}</b>  </div>
-                <div>${map.get(slot.id).get(day).className}</div>
-                (${slot.time}) <span style="color: ${map.get(slot.id).get(day).attend==1?"green":map.get(slot.id).get(day).attend==2?"unset":"red"}" >( ${map.get(slot.id).get(day).attend==2?"Not yet":map.get(slot.id).get(day).attend==1?"attend":"absent"})</span>
-
-                </td>
-                </c:when>
-                <c:otherwise>
-                <td>-</td>
-                </c:otherwise>
-                </c:choose>
-                </c:forEach>
-                </c:when>
-                <c:otherwise>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                </c:otherwise>
-                </c:choose>
-
-                </tr>
-
-                </c:forEach>*@
-
             </tbody>
         </table>
     </div>

@@ -16,6 +16,8 @@ namespace StudentManagement.Models
         public int LecturerId { get; set; }
         public string LecturerName { get; set; }
         public string LecturerEmail { get; set; }
+        public string LecturerPass { get; set; }
+        public string LecturerImg { get; set; }
 
         public virtual ICollection<Schedule> Schedules { get; set; }
         public virtual ICollection<Subject> Subjects { get; set; }

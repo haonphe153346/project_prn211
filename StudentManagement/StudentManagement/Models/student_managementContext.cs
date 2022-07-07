@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
@@ -36,8 +35,7 @@ namespace StudentManagement.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-                optionsBuilder.UseSqlServer(config.GetConnectionString("MyConstr"));
+                optionsBuilder.UseSqlServer("server=localhost; database=student_management;uid=sa;password=matma123");
             }
         }
 
@@ -102,9 +100,17 @@ namespace StudentManagement.Models
                     .HasMaxLength(255)
                     .HasColumnName("lecturer_email");
 
+                entity.Property(e => e.LecturerImg)
+                    .HasMaxLength(255)
+                    .HasColumnName("lecturer_img");
+
                 entity.Property(e => e.LecturerName)
                     .HasMaxLength(255)
                     .HasColumnName("lecturer_name");
+
+                entity.Property(e => e.LecturerPass)
+                    .HasMaxLength(255)
+                    .HasColumnName("lecturer_pass");
             });
 
             modelBuilder.Entity<Room>(entity =>
@@ -208,15 +214,27 @@ namespace StudentManagement.Models
                     .HasColumnType("date")
                     .HasColumnName("student_bofd");
 
+                entity.Property(e => e.StudentCode)
+                    .HasMaxLength(50)
+                    .HasColumnName("student_code");
+
                 entity.Property(e => e.StudentEmail)
                     .HasMaxLength(255)
                     .HasColumnName("student_email");
 
                 entity.Property(e => e.StudentGender).HasColumnName("student_gender");
 
+                entity.Property(e => e.StudentImg)
+                    .HasMaxLength(255)
+                    .HasColumnName("student_img");
+
                 entity.Property(e => e.StudentName)
                     .HasMaxLength(255)
                     .HasColumnName("student_name");
+
+                entity.Property(e => e.StudentPass)
+                    .HasMaxLength(255)
+                    .HasColumnName("student_pass");
 
                 entity.HasOne(d => d.Class)
                     .WithMany(p => p.Students)
