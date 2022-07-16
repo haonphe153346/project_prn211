@@ -57,10 +57,9 @@
                                 }
                             </select><BR><br>
                             WEEK  <select onchange="submit()" name="weekid">
-
-                                @for (int i = 0; i < ViewBag.week.Count; i++)
+                                @foreach (var item in ViewBag.week)
                                 {
-                                    <option selected="@((i+1) == ViewBag.selectedWeek?"selected":null)" value="@(i+1)">@ViewBag.week[i]</option>
+                                    <option selected="@(item.WeekId == ViewBag.selectedWeek?"selected":null)" value="@item.WeekId">@item.WeekDate</option>
                                 }
                             </select>
                         </form>
@@ -105,32 +104,7 @@
                                             at
                                             @map[slot.SlotId][date].Room.RoomName
                                             <br>
-                                            @*@for (int i = check; i < ViewBag.studentAttend.Count; i++)
-                                            {
-                                                <span style="color:green">@ViewBag.studentAttend.Count</span>
-                                                if(ViewBag.studentAttend[i].ScheduleId == @map[slot.SlotId][date].ScheduleId)
-                                                {
-                                                    if(ViewBag.studentAttend[i].StudentStatus == 2)
-                                                    {
-                                                        <span style="color:green">Attend</span>
-                                                        check++;
-                                                        break;
-                                                    }
-                                                    else if(ViewBag.studentAttend[i].StudentStatus == 1)
-                                                    {
-                                                        <span style="color:red">Absent</span>
-                                                        check++;
-                                                        break;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <span style="color:red">Not Yet</span>
-                                                    
-                                                     break;
-                                                }
-                                            }*@
-                                            @if(ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 2)
+                                            @if (ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 2)
                                             {
                                                 <span style="color:green">Attend</span>
                                                 check++;
@@ -155,11 +129,21 @@
                                         <div><b>-</b></div>
                                     </td>
                                 }
-                                if(check < ViewBag.studentAttend.Count)
+                                if (check < ViewBag.studentAttend.Count)
                                 {
-                                     
+
                                 }
                             }
+                        }
+                        else
+                        {
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
                         }
                     </tr>
                 }

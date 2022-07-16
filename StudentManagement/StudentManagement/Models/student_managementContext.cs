@@ -29,6 +29,7 @@ namespace StudentManagement.Models
         public virtual DbSet<StudentAttended> StudentAttendeds { get; set; }
         public virtual DbSet<StudentGrade> StudentGrades { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
+        public virtual DbSet<Week> Weeks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -150,6 +151,8 @@ namespace StudentManagement.Models
 
                 entity.Property(e => e.SubjectId).HasColumnName("subject_id");
 
+                entity.Property(e => e.WeekId).HasColumnName("week_id");
+
                 entity.HasOne(d => d.Class)
                     .WithMany(p => p.Schedules)
                     .HasForeignKey(d => d.ClassId)
@@ -174,6 +177,11 @@ namespace StudentManagement.Models
                     .WithMany(p => p.Schedules)
                     .HasForeignKey(d => d.SubjectId)
                     .HasConstraintName("FK__schedule__subjec__5AEE82B9");
+
+                entity.HasOne(d => d.Week)
+                    .WithMany(p => p.Schedules)
+                    .HasForeignKey(d => d.WeekId)
+                    .HasConstraintName("FK__schedule__week_i__73BA3083");
             });
 
             modelBuilder.Entity<Semester>(entity =>
@@ -331,6 +339,17 @@ namespace StudentManagement.Models
                     .WithMany(p => p.Subjects)
                     .HasForeignKey(d => d.SemesterId)
                     .HasConstraintName("FK__subject__semeste__45F365D3");
+            });
+
+            modelBuilder.Entity<Week>(entity =>
+            {
+                entity.ToTable("week");
+
+                entity.Property(e => e.WeekId).HasColumnName("week_id");
+
+                entity.Property(e => e.WeekDate)
+                    .HasMaxLength(255)
+                    .HasColumnName("week_date");
             });
 
             OnModelCreatingPartial(modelBuilder);

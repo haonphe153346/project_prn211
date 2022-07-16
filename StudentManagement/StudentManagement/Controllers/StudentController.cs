@@ -124,17 +124,17 @@ namespace StudentManagement.Controllers
             ViewBag.Subject = context.Subjects.ToList();
             ViewBag.Room = context.Rooms.ToList();
             ViewBag.slot = listSlot;
-            ViewBag.week = Weeks;
+            ViewBag.week = context.Weeks.ToList();
             ViewBag.attend = attended;
             ViewBag.Date = listDate;
-            ViewBag.selectedWeek = Convert.ToInt32("1");
+            ViewBag.selectedWeek = 1;
             return View();
         }
         [HttpPost]
-        public IActionResult TimeTable(String weekid)
+        public IActionResult TimeTable(int weekid)
         {
-            var ls = context.Schedules.
-                Where(p => p.Day == weekid);
+            List<Schedule> ls = context.Schedules.
+                Where(p => p.WeekId == weekid).ToList();
             Dictionary<int, List<Schedule>> map = new Dictionary<int, List<Schedule>>();
             for (int i = 1; i <= 8; i++)
             {
@@ -162,7 +162,7 @@ namespace StudentManagement.Controllers
             }
 
             var date_raw = (from Schedule in context.Schedules
-                            where Schedule.Day == weekid
+                            where Schedule.WeekId == weekid
                             select Schedule.ScheduleDate)
                             .Distinct().ToList();
             List<String> listDate = new List<String>();
@@ -205,12 +205,46 @@ namespace StudentManagement.Controllers
                 if (i == 0 || i % 2 == 0)
                     Weeks.Add(listWeek[i] + "-" + listWeek[i+1]);
             }
+            List<StudentAttended> listAttend = (from StudentAttended in context.StudentAttendeds
+                                                where StudentAttended.StudentId == 1
+                                                select StudentAttended
+                                                ).ToList();
+            ViewBag.studentAttend = listAttend;
+            List<int> attendance = new List<int>();
+            Dictionary<int, int> attended = new Dictionary<int, int>();
+            for (int i = 0; i<ls.Count; i++)
+            {
+                for (int j = 0; j<listAttend.Count; j++)
+                {
+                    if (ls[i].ScheduleId == listAttend[j].ScheduleId)
+                    {
+                        if (listAttend[j].StudentStatus == 2)
+                        {
+                            attended.Add(ls[i].ScheduleId, 2);
+                            i++;
+                        }
+                        else
+                        {
+                            attended.Add(ls[i].ScheduleId, 1);
+                            i++;
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i<ls.Count; i++)
+            {
+                if (!attended.ContainsKey(ls[i].ScheduleId))
+                {
+                    attended.Add(ls[i].ScheduleId, 0);
+                }
+            }
             ViewBag.Subject = context.Subjects.ToList();
-            ViewBag.Class = context.Classes.ToList();
+            ViewBag.Room = context.Rooms.ToList();
             ViewBag.slot = listSlot;
-            ViewBag.week = Weeks;
-            ViewBag.selectedWeek = Convert.ToInt32(weekid);
+            ViewBag.week = context.Weeks.ToList();
+            ViewBag.attend = attended;
             ViewBag.Date = listDate;
+            ViewBag.selectedWeek = weekid;
             return View();
         }
 
@@ -245,7 +279,6 @@ namespace StudentManagement.Controllers
             ViewBag.classId = classId;
             return View();
         }
-
         public IActionResult CheckAttendance(List<int> attendance, int scheduleId, int classId)
         {
             List<Student> listStudent = (from Student in context.Students
