@@ -53,7 +53,7 @@ namespace Student_Management
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=ViewAttendance}/{action=Index}/{id?}");
             });
         }
     }
