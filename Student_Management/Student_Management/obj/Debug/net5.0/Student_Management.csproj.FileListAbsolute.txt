@@ -142,3 +142,8 @@ D:\FPT\Semester_5\PRN211\Project\project_prn211\Student_Management\Student_Manag
 D:\FPT\Semester_5\PRN211\Project\project_prn211\Student_Management\Student_Management\obj\Debug\net5.0\Student_Management.pdb
 D:\FPT\Semester_5\PRN211\Project\project_prn211\Student_Management\Student_Management\obj\Debug\net5.0\Student_Management.genruntimeconfig.cache
 D:\FPT\Semester_5\PRN211\Project\project_prn211\Student_Management\Student_Management\obj\Debug\net5.0\ref\Student_Management.dll
+D:\FPT\Semester_5\PRN211\Project\project_prn211\Student_Management\Student_Management\obj\Debug\net5.0\Razor\Views\Login\Login.cshtml.g.cs
+D:\FPT\Semester_5\PRN211\Project\project_prn211\Student_Management\Student_Management\obj\Debug\net5.0\Razor\Views\Login\Lecturer.cshtml.g.cs
+D:\FPT\Semester_5\PRN211\Project\project_prn211\Student_Management\Student_Management\obj\Debug\net5.0\Razor\Views\Login\Student.cshtml.g.cs
+D:\FPT\Semester_5\PRN211\Project\project_prn211\Student_Management\Student_Management\obj\Debug\net5.0\Razor\Views\ViewAttendance\Index.cshtml.g.cs
+D:\FPT\Semester_5\PRN211\Project\project_prn211\Student_Management\Student_Management\obj\Debug\net5.0\Razor\Views\ViewAttendance\ViewAttendanceDetail.cshtml.g.cs
