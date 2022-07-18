@@ -16,8 +16,19 @@ namespace StudentManagement.Controllers
         }
         public IActionResult TimeTable()
         {
+            // getDate
+            List<Week> listWeek1 = context.Weeks.ToList();
+            int weekid = 0;
+            foreach (var item in listWeek1)
+            {
+                if (DateTime.Compare(DateTime.Now, (DateTime)item.EndDate)<0)
+                {
+                    weekid = item.WeekId;
+                    break;
+                }
+            }
             List<Schedule> ls = context.Schedules.
-                Where(p => p.Day == "1").ToList();
+                Where(p => p.WeekId == weekid).ToList();
             Dictionary<int, List<Schedule>> map = new Dictionary<int, List<Schedule>>();
             for (int i = 1; i <= 8; i++)
             {
@@ -31,6 +42,7 @@ namespace StudentManagement.Controllers
                 }
                 map.Add(i, schedules);
             }
+            
             Dictionary<int, Dictionary<string, Schedule>> map2 = new Dictionary<int, Dictionary<string, Schedule>>();
             foreach (var m in map)
             {
@@ -45,7 +57,7 @@ namespace StudentManagement.Controllers
             }
 
             var date_raw = (from Schedule in context.Schedules
-                            where Schedule.Day == "1"
+                            where Schedule.WeekId == weekid
                             select Schedule.ScheduleDate)
                             .Distinct().ToList();
             List<String> listDate = new List<String>();
@@ -121,18 +133,34 @@ namespace StudentManagement.Controllers
                     attended.Add(ls[i].ScheduleId, 0);
                 }
             }
+            ViewBag.Count = ls.Count();
             ViewBag.Subject = context.Subjects.ToList();
             ViewBag.Room = context.Rooms.ToList();
             ViewBag.slot = listSlot;
             ViewBag.week = context.Weeks.ToList();
             ViewBag.attend = attended;
             ViewBag.Date = listDate;
-            ViewBag.selectedWeek = 1;
+            ViewBag.selectedWeek = weekid;
+            ViewBag.IsAttend = 1;
             return View();
         }
         [HttpPost]
         public IActionResult TimeTable(int weekid)
         {
+            List<Week> listWeek1 = context.Weeks.ToList();
+            int weekid_check = 0;
+            foreach (var item in listWeek1)
+            {
+                if (DateTime.Compare(DateTime.Now, (DateTime)item.EndDate)<0)
+                {
+                    weekid_check = item.WeekId;
+                    break;
+                }
+            }
+            if(weekid == weekid_check)
+            {
+                ViewBag.IsAttend = 1;
+            }
             List<Schedule> ls = context.Schedules.
                 Where(p => p.WeekId == weekid).ToList();
             Dictionary<int, List<Schedule>> map = new Dictionary<int, List<Schedule>>();
@@ -238,6 +266,7 @@ namespace StudentManagement.Controllers
                     attended.Add(ls[i].ScheduleId, 0);
                 }
             }
+            ViewBag.Count = ls.Count();
             ViewBag.Subject = context.Subjects.ToList();
             ViewBag.Room = context.Rooms.ToList();
             ViewBag.slot = listSlot;
@@ -279,11 +308,24 @@ namespace StudentManagement.Controllers
             ViewBag.classId = classId;
             return View();
         }
+        public IActionResult EditAttendance(int classId, int scheduleId)
+        {
+            var ListStudent = (from Student in context.Students
+                               where Student.ClassId == classId
+                               select Student);
+            ViewBag.student = ListStudent;
+            ViewBag.scheduleId = scheduleId;
+            ViewBag.classId = classId;
+            return View();
+        }
         public IActionResult CheckAttendance(List<int> attendance, int scheduleId, int classId)
         {
             List<Student> listStudent = (from Student in context.Students
                                          where Student.ClassId == classId
                                          select Student).ToList();
+            Schedule schedule = context.Schedules.SingleOrDefault(s => s.ScheduleId == scheduleId);
+            schedule.Status = true;
+            context.SaveChanges();
             if (listStudent.Count() == attendance.Count())
             {
                 for (int i = 0; i<listStudent.Count(); i++)
@@ -325,12 +367,53 @@ namespace StudentManagement.Controllers
                     studentAttended.StudentAttendedDate = DateTime.Now;
                     context.StudentAttendeds.Add(studentAttended);
                     context.SaveChanges();
-
                 }
             }
-
             ViewBag.check = attendance;
+            return RedirectToAction("TimeTable");
+        }
+        public IActionResult CheckEditAttendance(List<int> attendance, int scheduleId, int classId)
+        {
+            List<Student> listStudent = (from Student in context.Students
+                                         where Student.ClassId == classId
+                                         select Student).ToList();
+            if (listStudent.Count() == attendance.Count())
+            {
+                for (int i = 0; i<listStudent.Count(); i++)
+                {
+                    StudentAttended studentAttended1 = context.StudentAttendeds.
+                        FirstOrDefault(x => x.StudentId == listStudent[i].StudentId 
+                        && x.ScheduleId == scheduleId);
+                    studentAttended1.StudentStatus = 2;
+                    context.SaveChanges();
+                    i++;
+                }
+            }
+            else
+            {
+                for (int i = 0; i<listStudent.Count(); i++)
+                {
+                    for (int j = 0; j<attendance.Count(); j++)
+                    {
+                        if (listStudent[i].StudentId == attendance[j])
+                        {
+                            StudentAttended studentAttended1 = context.StudentAttendeds.
+                                FirstOrDefault(x => x.StudentId == listStudent[i].StudentId
+                                && x.ScheduleId == scheduleId);
+                            studentAttended1.StudentStatus = 2;
+                            context.SaveChanges();
+                            i++;
+                        }
 
+                    }
+                    StudentAttended studentAttended = context.StudentAttendeds.
+                        FirstOrDefault(x => x.StudentId == listStudent[i].StudentId
+                        && x.ScheduleId == scheduleId);
+                    studentAttended.StudentStatus = 1;
+                    context.SaveChanges();
+                }
+            }
+            ViewBag.check = attendance;
             return RedirectToAction("TimeTable");
         }
     }

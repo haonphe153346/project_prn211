@@ -6,6 +6,7 @@
     Dictionary<int, Dictionary<string, Schedule>> map = ViewBag.TimeTable;
     List<StudentAttended> list = ViewBag.StudentAttendance;
     int check = 0;
+    student_managementContext context = new student_managementContext();
 }
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -39,7 +40,14 @@
     </div>
 </nav>
 <h1>Activities for ...(HE151308)</h1>
-<h3>Select a term, course ...</h3>
+<div>
+    Rooms starting with AL belong to the Alpha building. VD: AL...<br />
+    Rooms starting with BE belong to the Beta building. Ex: BE,..<br />
+    Rooms starting with G belong to the Gamma building. Example: G201,...<br />
+    R-head training rooms in the Vovinam training ground area.<br />
+    Rooms starting with DE belong to the Delta building. Ex: DE,..<br />
+    Little UK (LUK) is on the 5th floor of Delta building
+</div>
 <div class="container-fluid">
     <div class="timetable-img text-center">
         <img src="img/content/timetable.png" alt="">
@@ -80,74 +88,117 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (Slot slot in ViewBag.slot)
+                @if (@ViewBag.Count != 0)
                 {
-                    <tr>
-                        <td class="align-middle">
-                            Slot @slot.SlotId
-                        </td>
-                        @if (map.ContainsKey(@slot.SlotId))
-                        {
-                            @foreach (String date in ViewBag.Date)
+                    @foreach (Slot slot in ViewBag.slot)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                Slot @slot.SlotId
+                            </td>
+                            @if (map.ContainsKey(@slot.SlotId))
                             {
-                                @if (map.Values.ElementAt(@slot.SlotId-1).ContainsKey(date))
+                                @foreach (String date in ViewBag.Date)
                                 {
-                                    <td>
+                                    @if (map.Values.ElementAt(@slot.SlotId-1).ContainsKey(date))
+                                    {
+                                        <td>
 
-                                        <a asp-controller="Student" asp-action="ActivityDetail" asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
-                                            <b>@map[slot.SlotId][date].Subject.SubjectCode</b>
-                                        </a>
-                                        <a asp-controller="Student" asp-action="Attendance" asp-route-classId=@map[slot.SlotId][date].ClassId asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
-                                            <b>Attendance</b>
-                                        </a>
-                                        <div>
-                                            at
-                                            @map[slot.SlotId][date].Room.RoomName
-                                            <br>
-                                            @if (ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 2)
+                                            <a asp-controller="Student" asp-action="ActivityDetail" asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
+                                                <b>@map[slot.SlotId][date].Subject.SubjectCode</b>
+                                            </a>
+                                            @if(@map[slot.SlotId][date].Status == false)
                                             {
-                                                <span style="color:green">Attend</span>
-                                                check++;
-                                            }
-                                            else if (ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 1)
-                                            {
-                                                <span style="color:red">Absent</span>
-                                                check++;
+                                               <a asp-controller="Student" asp-action="Attendance" asp-route-classId=@map[slot.SlotId][date].ClassId asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
+                                                <b>Attendance</b>
+                                                </a>
                                             }
                                             else
                                             {
-                                                <span style="color:red">Not Yet</span>
-                                                check++;
+                                                if(DateTime.Compare(DateTime.Now, Convert.ToDateTime(context.StudentAttendeds.FirstOrDefault
+                                                (x => x.ScheduleId == @map[slot.SlotId][date].ScheduleId).StudentAttendedDate).AddDays(2)) < 0)
+                                                {
+                                                <br />
+                                                <a style="color:green" asp-controller="Student" asp-action="EditAttendance" asp-route-classId=@map[slot.SlotId][date].ClassId asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
+                                                <b>Edit</b>
+                                                </a>
+                                                }
                                             }
-                                        </div>(@slot.SlotTime)<br>
+                                            <div>
+                                                at
+                                                @map[slot.SlotId][date].Room.RoomName
+                                                <br>
+                                                @if (ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 2)
+                                                {
+                                                    <span style="color:green">Attend</span>
+                                                    check++;
+                                                }
+                                                else if (ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 1)
+                                                {
+                                                    <span style="color:red">Absent</span>
+                                                    check++;
+                                                }
+                                                else
+                                                {
+                                                    <span style="color:red">Not Yet</span>
+                                                    check++;
+                                                }
+                                            </div>(@slot.SlotTime)<br>
 
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td>
-                                        <div><b>-</b></div>
-                                    </td>
-                                }
-                                if (check < ViewBag.studentAttend.Count)
-                                {
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <div><b>-</b></div>
+                                        </td>
+                                    }
+                                    if (check < ViewBag.studentAttend.Count)
+                                    {
 
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                        }
-                    </tr>
+                            else
+                            {
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            }
+                        </tr>
+                    }
                 }
+                else
+                {
+                    @foreach (Slot slot in ViewBag.slot)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                Slot @slot.SlotId
+                            </td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    }
+                }
+                
             </tbody>
         </table>
+        <div>
+            -More notes / Extra notes:<br />
+
+            *(attended): HoanNNHE151308 had attended this activity / Nguyen Ngoc Hoan attended this activity<br />
+            *(absent): HoanNNHE151308 had NOT attended this activity / Nguyen Ngoc Hoan was absent from this session<br />
+            *(-): no data was given / no data yet
+        </div>
     </div>
 </div>

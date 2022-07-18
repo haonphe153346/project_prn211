@@ -145,3 +145,4 @@ D:\S5\ProjectPRN192\StudentManagement\StudentManagement\obj\Debug\net5.0\Razor\V
 D:\S5\ProjectPRN192\StudentManagement\StudentManagement\obj\Debug\net5.0\Razor\Views\Student\ClassDetail.cshtml.g.cs
 D:\S5\ProjectPRN192\StudentManagement\StudentManagement\obj\Debug\net5.0\Razor\Views\Student\Attendance.cshtml.g.cs
 D:\S5\ProjectPRN192\StudentManagement\StudentManagement\obj\Debug\net5.0\Razor\Views\Student\checkAttendance.cshtml.g.cs
+D:\S5\ProjectPRN192\StudentManagement\StudentManagement\obj\Debug\net5.0\Razor\Views\Student\EditAttendance.cshtml.g.cs

@@ -348,6 +348,10 @@ namespace StudentManagement.Models
 
                 entity.Property(e => e.WeekId).HasColumnName("week_id");
 
+                entity.Property(e => e.EndDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("end_date");
+
                 entity.Property(e => e.WeekDate)
                     .HasMaxLength(255)
                     .HasColumnName("week_date");
