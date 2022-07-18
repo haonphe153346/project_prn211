@@ -14,6 +14,7 @@ namespace StudentManagement.Models
 
         public int WeekId { get; set; }
         public string WeekDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public virtual ICollection<Schedule> Schedules { get; set; }
     }
