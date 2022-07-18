@@ -35,7 +35,7 @@ namespace StudentManagement.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server=localhost; database=student_management;uid=sa;password=matma123");
+                optionsBuilder.UseSqlServer("server=localhost; database=student_management;uid=sa;password=123");
             }
         }
 
@@ -58,7 +58,7 @@ namespace StudentManagement.Models
                 entity.HasOne(d => d.Semester)
                     .WithMany(p => p.Classes)
                     .HasForeignKey(d => d.SemesterId)
-                    .HasConstraintName("FK__class__semester___398D8EEE");
+                    .HasConstraintName("FK__class__semester___38996AB5");
             });
 
             modelBuilder.Entity<Grade>(entity =>
@@ -73,10 +73,12 @@ namespace StudentManagement.Models
                     .HasMaxLength(255)
                     .HasColumnName("grade_name");
 
+                entity.Property(e => e.Weight).HasColumnName("WEIGHT");
+
                 entity.HasOne(d => d.GradeCategory)
                     .WithMany(p => p.Grades)
                     .HasForeignKey(d => d.GradeCategoryId)
-                    .HasConstraintName("FK__grade__grade_cat__3A81B327");
+                    .HasConstraintName("FK__grade__grade_cat__398D8EEE");
             });
 
             modelBuilder.Entity<GradeCategory>(entity =>
@@ -153,27 +155,27 @@ namespace StudentManagement.Models
                 entity.HasOne(d => d.Class)
                     .WithMany(p => p.Schedules)
                     .HasForeignKey(d => d.ClassId)
-                    .HasConstraintName("FK__schedule__class___3B75D760");
+                    .HasConstraintName("FK__schedule__class___3A81B327");
 
                 entity.HasOne(d => d.Lecturer)
                     .WithMany(p => p.Schedules)
                     .HasForeignKey(d => d.LecturerId)
-                    .HasConstraintName("FK__schedule__lectur__3C69FB99");
+                    .HasConstraintName("FK__schedule__lectur__3B75D760");
 
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Schedules)
                     .HasForeignKey(d => d.RoomId)
-                    .HasConstraintName("FK__schedule__room_i__3D5E1FD2");
+                    .HasConstraintName("FK__schedule__room_i__3C69FB99");
 
                 entity.HasOne(d => d.Slot)
                     .WithMany(p => p.Schedules)
                     .HasForeignKey(d => d.SlotId)
-                    .HasConstraintName("FK__schedule__slot_i__3E52440B");
+                    .HasConstraintName("FK__schedule__slot_i__3D5E1FD2");
 
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.Schedules)
                     .HasForeignKey(d => d.SubjectId)
-                    .HasConstraintName("FK__schedule__subjec__5AEE82B9");
+                    .HasConstraintName("FK__schedule__subjec__3E52440B");
             });
 
             modelBuilder.Entity<Semester>(entity =>
@@ -281,6 +283,8 @@ namespace StudentManagement.Models
 
                 entity.Property(e => e.SubjectId).HasColumnName("subject_id");
 
+                entity.Property(e => e.Value).HasColumnName("value");
+
                 entity.HasOne(d => d.Grade)
                     .WithMany()
                     .HasForeignKey(d => d.GradeId)
@@ -325,12 +329,12 @@ namespace StudentManagement.Models
                 entity.HasOne(d => d.Lecturer)
                     .WithMany(p => p.Subjects)
                     .HasForeignKey(d => d.LecturerId)
-                    .HasConstraintName("FK__subject__lecture__38996AB5");
+                    .HasConstraintName("FK__subject__lecture__45F365D3");
 
                 entity.HasOne(d => d.Semester)
                     .WithMany(p => p.Subjects)
                     .HasForeignKey(d => d.SemesterId)
-                    .HasConstraintName("FK__subject__semeste__45F365D3");
+                    .HasConstraintName("FK__subject__semeste__46E78A0C");
             });
 
             OnModelCreatingPartial(modelBuilder);

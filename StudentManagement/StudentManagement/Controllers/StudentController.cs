@@ -63,7 +63,7 @@ namespace StudentManagement.Controllers
             List<string> listWeek = new List<string>();
             List<string> Weeks = new List<string>();
             int count = 1;
-            for (int i = 0; i<listDay.Count; i++)
+            for (int i = 0; i < listDay.Count; i++)
             {
                 if (count == 1 || count % 7 == 0)
                 {
@@ -83,10 +83,10 @@ namespace StudentManagement.Controllers
                     count++;
                 }
             }
-            for (int i = 0; i<listWeek.Count; i++)
+            for (int i = 0; i < listWeek.Count; i++)
             {
                 if (i == 0 || i % 2 == 0)
-                    Weeks.Add(listWeek[i] + "-" + listWeek[i+1]);
+                    Weeks.Add(listWeek[i] + "-" + listWeek[i + 1]);
             }
             List<StudentAttended> listAttend = (from StudentAttended in context.StudentAttendeds
                                                 where StudentAttended.StudentId == 1
@@ -95,13 +95,13 @@ namespace StudentManagement.Controllers
             ViewBag.studentAttend = listAttend;
             List<int> attendance = new List<int>();
             Dictionary<int, int> attended = new Dictionary<int, int>();
-            for (int i = 0; i<ls.Count; i++)
+            for (int i = 0; i < ls.Count; i++)
             {
-                for(int j = 0; j<listAttend.Count; j++)
+                for (int j = 0; j < listAttend.Count; j++)
                 {
-                    if(ls[i].ScheduleId == listAttend[j].ScheduleId)
+                    if (ls[i].ScheduleId == listAttend[j].ScheduleId)
                     {
-                        if(listAttend[j].StudentStatus == 2)
+                        if (listAttend[j].StudentStatus == 2)
                         {
                             attended.Add(ls[i].ScheduleId, 2);
                             i++;
@@ -114,7 +114,7 @@ namespace StudentManagement.Controllers
                     }
                 }
             }
-            for(int i = 0; i<ls.Count; i++)
+            for (int i = 0; i < ls.Count; i++)
             {
                 if (!attended.ContainsKey(ls[i].ScheduleId))
                 {
@@ -180,7 +180,7 @@ namespace StudentManagement.Controllers
             List<string> listWeek = new List<string>();
             List<string> Weeks = new List<string>();
             int count = 1;
-            for (int i = 0; i<listDay.Count; i++)
+            for (int i = 0; i < listDay.Count; i++)
             {
                 if (count == 1 || count % 7 == 0)
                 {
@@ -200,10 +200,10 @@ namespace StudentManagement.Controllers
                     count++;
                 }
             }
-            for (int i = 0; i<listWeek.Count; i++)
+            for (int i = 0; i < listWeek.Count; i++)
             {
                 if (i == 0 || i % 2 == 0)
-                    Weeks.Add(listWeek[i] + "-" + listWeek[i+1]);
+                    Weeks.Add(listWeek[i] + "-" + listWeek[i + 1]);
             }
             ViewBag.Subject = context.Subjects.ToList();
             ViewBag.Class = context.Classes.ToList();
@@ -253,7 +253,7 @@ namespace StudentManagement.Controllers
                                          select Student).ToList();
             if (listStudent.Count() == attendance.Count())
             {
-                for (int i = 0; i<listStudent.Count(); i++)
+                for (int i = 0; i < listStudent.Count(); i++)
                 {
                     StudentAttended studentAttended1 = new StudentAttended();
                     studentAttended1.StudentId = listStudent[i].StudentId;
@@ -268,9 +268,9 @@ namespace StudentManagement.Controllers
             }
             else
             {
-                for (int i = 0; i<listStudent.Count(); i++)
+                for (int i = 0; i < listStudent.Count(); i++)
                 {
-                    for (int j = 0; j<attendance.Count(); j++)
+                    for (int j = 0; j < attendance.Count(); j++)
                     {
                         if (listStudent[i].StudentId == attendance[j])
                         {
@@ -299,6 +299,81 @@ namespace StudentManagement.Controllers
             ViewBag.check = attendance;
 
             return RedirectToAction("TimeTable");
+        }
+        public IActionResult StudentDetails(int StudentID)
+        {
+            StudentID = 4;
+            Student student = context.Students.Where(x => x.StudentId == StudentID).FirstOrDefault();
+            if (student == null)
+            {
+                return View("Error");
+            }
+
+            return View(student);
+        }
+        public IActionResult StudentGrade(int StudentId)
+        {
+            StudentId = 5;
+            //List semester
+            List<Semester> listSemeters = context.Semesters.ToList();
+            ViewBag.listSemeters = listSemeters;
+            //List Grade
+            List<Grade> grades = context.Grades.ToList();
+            //List Grade Category
+            List<GradeCategory> gradeCategories = context.GradeCategories.ToList();
+            //List Subject
+            var listSubject = (from st in context.Students
+                               join su in context.Subjects on st.ClassId equals su.ClassId
+                               where st.StudentId == StudentId
+                               select su).ToList();
+            ViewBag.listSubjects = listSubject;
+
+            return View();
+        }
+
+        public IActionResult GradeOfSubject(int SubjectId)
+        {
+int 
+            StudentId = 5;
+            //List semester
+            List<Semester> listSemeters = context.Semesters.ToList();
+            ViewBag.listSemeters = listSemeters;
+            //List Grade
+            List<Grade> grades = context.Grades.ToList();
+            ViewBag.grades = grades;
+            //List Grade Category
+            List<GradeCategory> gradeCategories = context.GradeCategories.ToList();
+            //List Subject
+            var listSubject = (from st in context.Students
+                               join su in context.Subjects on st.ClassId equals su.ClassId
+                               where st.StudentId == StudentId
+                               select su).ToList();
+            ViewBag.listSubjects = listSubject;
+
+
+
+            List<StudentGrade> studentGrades = context.StudentGrades.Where(x => x.SubjectId == SubjectId && x.StudentId == StudentId).OrderBy(x => x.GradeId).OrderBy(x => x.Grade.GradeCategoryId).ToList();
+            ViewBag.studentGrades = studentGrades;
+
+            float avgDiem = 0;
+            int count = 0;
+            foreach(StudentGrade grade in studentGrades)
+            {
+                foreach(Grade grade1 in grades)
+                {
+                    if(grade.GradeId == grade1.GradeId)
+                    {
+
+                        avgDiem = avgDiem + (float)((grade.Value * grade1.Weight) / 100);
+
+                        count = count + 1;
+                    }
+                }
+            }
+            avgDiem /= count;
+            ViewBag.avgDiem = avgDiem;
+
+            return View(studentGrades);
         }
     }
 }

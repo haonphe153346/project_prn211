@@ -10,6 +10,7 @@ namespace StudentManagement.Models
         public int GradeId { get; set; }
         public int? GradeCategoryId { get; set; }
         public string GradeName { get; set; }
+        public int? Weight { get; set; }
 
         public virtual GradeCategory GradeCategory { get; set; }
     }
