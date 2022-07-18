@@ -6007,11 +6007,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\S5\\ProjectPRN192\\StudentManagement\\StudentManagement\\StudentManagement.csproj",
+      "projectUniqueName": "D:\\S5\\gihubClone\\project_prn211\\StudentManagement\\StudentManagement\\StudentManagement.csproj",
       "projectName": "StudentManagement",
-      "projectPath": "D:\\S5\\ProjectPRN192\\StudentManagement\\StudentManagement\\StudentManagement.csproj",
+      "projectPath": "D:\\S5\\gihubClone\\project_prn211\\StudentManagement\\StudentManagement\\StudentManagement.csproj",
       "packagesPath": "C:\\Users\\win\\.nuget\\packages\\",
-      "outputPath": "D:\\S5\\ProjectPRN192\\StudentManagement\\StudentManagement\\obj\\",
+      "outputPath": "D:\\S5\\gihubClone\\project_prn211\\StudentManagement\\StudentManagement\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

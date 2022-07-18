@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZrGX0pBO6sRPSF99wZXRMM1VvAP/mfo4oByHJ8BXkrcz1gxkp6UV6+45RFIfe4h2CjKs1fyaq0wcVIgwKN6Qaw==",
+  "dgSpecHash": "bvZYN9E3Feui9osjhgcnjOiVcu+MxtAjRw/tKKyGwnTSnCkfypWJGTa/jryTBTxbJfC05Kr6C0+ORxfCUhDwQQ==",
   "success": true,
-  "projectFilePath": "D:\\S5\\ProjectPRN192\\StudentManagement\\StudentManagement\\StudentManagement.csproj",
+  "projectFilePath": "D:\\S5\\gihubClone\\project_prn211\\StudentManagement\\StudentManagement\\StudentManagement.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\win\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\win\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
