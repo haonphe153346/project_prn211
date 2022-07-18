@@ -73,19 +73,20 @@ namespace Student_Management.Controllers
             var session = HttpContext.Session;
             string jsonaccount = session.GetString("account");
             Student student = new Student();
-            if(jsonaccount != null)
+            if (jsonaccount != null)
             {
-                student = JsonConvert.DeserializeObject<Student>(jsonaccount); 
+                student = JsonConvert.DeserializeObject<Student>(jsonaccount);
             }
             ViewBag.Student = student;
             return View();
         }
+
         public IActionResult Lecturer()
         {
             var session = HttpContext.Session;
             string jsonaccount = session.GetString("account");
             Lecturer lecturer = new Lecturer();
-            if(jsonaccount!= null)
+            if (jsonaccount != null)
             {
                 lecturer = JsonConvert.DeserializeObject<Lecturer>(jsonaccount);
             }

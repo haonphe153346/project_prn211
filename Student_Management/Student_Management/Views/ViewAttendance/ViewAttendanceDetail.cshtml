@@ -26,7 +26,6 @@
         <table border="1px">
 
             <tr style="font-weight: bold">
-                <td>No</td>
                 <td>Date</td>
                 <td>Slot</td>
                 <td>Room</td>
@@ -35,30 +34,30 @@
                 <td>Attendance Status</td>
             </tr>
 
-            @for (var i = 1; i <= Model.Count(); i++)
+            @foreach (Schedule s in Model)
             {
                 <tr>
-                    <td>i</td>
-                    <td>@Model[i].ScheduleDate</td>
-                    <td>@Model[i].SlotId</td>
-                    <td>@Model[i].Room.RoomName</td>
-                    <td>@Model[i].Lecturer.LecturerName</td>
-                    <td>@Model[i].Class.ClassName</td>
-                    @if (@Model[i].Status == true)
-                        {
-                            <td style="color: green">Attend</td>
-                        }
-                        else if(@Model[i].Status == true)
-                        {
-                            <td style="color: red">Absent</td>
-                        }
-                        else
-                        {
-                            <td>Future</td>
-                        }
+                    <td>@s.ScheduleDate</td>
+                    <td>@s.Slot.SlotId (@s.Slot.SlotTime)</td>
+                    <td>@s.Room.RoomName</td>
+                    <td>@s.Lecturer.LecturerName</td>
+                    <td>@s.Class.ClassName</td>
+                    @if (@s.Status == true)
+                    {
+                        <td>Attend</td>
+                    }
+                    else if (@s.Status == false)
+                    {
+                        <td>Absent</td>
+                    }
+                    else
+                    {
+                        <td>Future</td>
+                    }
                 </tr>
             }
-                
+
+
         </table>
     </div>
 

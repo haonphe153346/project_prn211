@@ -3,12 +3,13 @@
     "",
     "\\Student_Management",
     "\\Student_Management\\Controllers",
+    "\\Student_Management\\Models",
     "\\Student_Management\\wwwroot",
     "\\Student_Management\\wwwroot\\css",
     "\\Student_Management\\wwwroot\\images",
     "\\Student_Management\\wwwroot\\js",
     "\\Student_Management\\wwwroot\\lib"
   ],
-  "SelectedNode": "\\Student_Management.sln",
+  "SelectedNode": "\\Student_Management",
   "PreviewInSolutionExplorer": false
 }

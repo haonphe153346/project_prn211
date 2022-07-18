@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Student_Management.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,14 @@ namespace Student_Management.Controllers
         student_managementContext db = new student_managementContext();
         public IActionResult Index()
         {
-            int studentId = 5;
+            var session = HttpContext.Session;
+            string jsonaccount = session.GetString("account");
+            Student student = new Student();
+            if (jsonaccount != null)
+            {
+                student = JsonConvert.DeserializeObject<Student>(jsonaccount);
+            }
+            var studentId = student.StudentId;
             var listSubject = (from st in db.Students
                                join su in db.Subjects on st.ClassId equals su.ClassId
                                where st.StudentId == studentId
@@ -21,7 +30,14 @@ namespace Student_Management.Controllers
 
         public IActionResult ViewAttendanceDetail(int subjectId)
         {
-            int studentId = 5;
+            var session = HttpContext.Session;
+            string jsonaccount = session.GetString("account");
+            Student student = new Student();
+            if (jsonaccount != null)
+            {
+                student = JsonConvert.DeserializeObject<Student>(jsonaccount);
+            }
+            var studentId = student.StudentId;
 
             var listSubject = (from st in db.Students
                                join su in db.Subjects on st.ClassId equals su.ClassId
@@ -41,10 +57,13 @@ namespace Student_Management.Controllers
             ViewBag.Total = total;
             ViewBag.Absent = absent;
 
+            List<Slot> slots = db.Slots.ToList();
             List<Room> rooms = db.Rooms.ToList();
             List<Lecturer> lecturers = db.Lecturers.ToList();
             List<Class> classes = db.Classes.ToList();
-            List<Schedule> schedule = db.Schedules.Where(s => s.SubjectId == subjectId).ToList();
+            List<Schedule> schedule = (from s in db.Schedules
+                                       where s.SubjectId == subjectId
+                                       select s).ToList();
             return View(schedule);
         }
     }
